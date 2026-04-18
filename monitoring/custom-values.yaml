@@ -1,0 +1,23 @@
+additionalPrometheusRulesMap:
+  rule-name:
+    groups:
+      - name: k8s-alerts
+        rules:
+          - alert: PodCrashLoop
+            expr: kube_pod_container_status_restarts_total > 3
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Pod {{ $labels.pod }} is in a CrashLoopBackOff"
+
+# Example placeholder for Alertmanager config
+alertmanager:
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname']
+      receiver: 'null' # Change this to 'slack' or 'email' when you set up webhooks
+    receivers:
+    - name: 'null'
